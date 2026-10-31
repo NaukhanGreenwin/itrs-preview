@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sample digital forensic examination report | IT Rapid Support</title>
+<link rel="icon" href="../../brand/favicon.ico">
+<style>
+@font-face{font-family:'Inter';src:url('../../fonts/inter-wght.woff2') format('woff2');font-weight:100 900;font-display:swap}
+:root{--ink:#0b1420;--steel:#3e6e9e;--slate:#5b6573;--line:#dfe4ea;--mist:#f3f5f8;--body:#26303c;
+--sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:#e6eaef}
+body{margin:0;font-family:var(--sans);color:var(--body);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:lining-nums tabular-nums}
+.bar{position:sticky;top:0;z-index:5;background:#0b1420;color:#c9d3de}
+.bar-in{max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:13px}
+.bar a{color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px;min-height:40px}
+.bar a:hover{text-decoration:underline}
+.bar .lab{color:#8fb0cf;letter-spacing:.04em;text-transform:uppercase;font-size:11.5px;font-weight:600}
+.bar .dl{border:1px solid rgba(255,255,255,.35);padding:0 14px;border-radius:2px;font-weight:500}
+.doc{padding:32px 16px 64px}
+.page{position:relative;background:#fff;max-width:816px;margin:0 auto 28px;box-shadow:0 1px 0 #d5dbe2,0 18px 44px -22px rgba(11,20,32,.35);padding:84px 80px 76px;overflow:hidden}
+@media (min-width:860px){.page{aspect-ratio:8.5/11}}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
+.wm span{transform:rotate(-32deg);font-size:150px;font-weight:600;letter-spacing:.04em;color:rgba(62,110,158,.06);white-space:nowrap}
+.page>*:not(.wm){position:relative;z-index:1}
+.rh,.rf{position:absolute!important;left:80px;right:80px;display:flex;justify-content:space-between;gap:12px;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--slate)}
+.rh{top:36px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.rf{bottom:32px;padding-top:8px;border-top:1px solid var(--line)}
+.rh b,.rf b{font-weight:600;color:var(--ink)}
+h1,h2,h3,h4{color:var(--ink);font-weight:600;letter-spacing:-.01em;margin:0}
+h2{font-size:19px;line-height:1.25;margin:30px 0 12px;display:flex;align-items:baseline;gap:12px;padding-bottom:9px;border-bottom:1.5px solid var(--ink)}
+.page>h2:first-of-type,.page>.rh+h2{margin-top:0}
+h2 .n{color:var(--steel);font-size:15px;min-width:18px}
+h3{font-size:14px;margin:22px 0 10px}
+h4{font-size:13.5px;line-height:1.35}
+p{margin:0 0 10px}
+.note{font-size:12.5px;color:var(--slate);margin-top:12px;padding-left:12px;border-left:2px solid var(--line)}
+.tbl{width:100%;overflow-x:auto;margin:10px 0 6px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.45;table-layout:fixed}
+thead th{text-align:left;font-weight:600;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:var(--ink);padding:8px 9px;vertical-align:bottom}
+tbody td{padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--body)}
+tbody tr:nth-child(even) td{background:#f7f9fb}
+tbody td:first-child{font-weight:600;color:var(--ink)}
+.hash{font-size:10px;color:var(--ink);letter-spacing:.01em;white-space:nowrap}
+.sm{font-size:11px;color:var(--slate)}
+table.coc td:first-child{white-space:nowrap}
+table.tl td:nth-child(-n+2){white-space:nowrap}
+table.tl tbody tr:nth-child(even) td{background:none}
+.notice{margin-top:40px;padding:22px 24px 12px;background:var(--mist);border-top:1.5px solid var(--ink)}
+.notice h3{margin:0 0 10px;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.notice p{font-size:12.5px;line-height:1.6}
+.kf{display:grid;grid-template-columns:repeat(4,1fr);margin:18px 0 22px;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line)}
+.kf>div{padding:14px 14px 14px 0}
+.kf>div+div{padding-left:14px;border-left:1px solid var(--line)}
+.kf b{display:block;font-size:24px;font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
+.kf span{display:block;margin-top:6px;font-size:11.5px;line-height:1.4;color:var(--slate)}
+.conf{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;line-height:1.3}
+.conf-high{background:#0b1420;color:#fff}
+.conf-moderate{background:#dce7f2;color:#173a5e}
+.conf-low{background:#fff;color:var(--slate);box-shadow:inset 0 0 0 1px #c3ccd6}
+/* cover */
+.cover{display:flex;flex-direction:column}
+.cv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.logo{width:150px;height:auto;display:block}
+.cv-priv{text-align:right;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);font-weight:600;line-height:1.6;border-right:3px solid var(--steel);padding-right:12px}
+.cv-main{margin-top:120px;border-top:3px solid var(--ink);padding-top:26px}
+.cv-kind{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--steel);font-weight:600}
+.cv-title{font-size:34px;line-height:1.14;letter-spacing:-.02em;margin-top:16px;max-width:600px}
+.cv-sub{font-size:15px;color:var(--slate);margin-top:16px}
+.cv-meta{margin:56px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px;border-top:1px solid var(--line)}
+.cv-meta div{padding:12px 0;border-bottom:1px solid var(--line)}
+.cv-meta dt{font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--slate)}
+.cv-meta dd{margin:4px 0 0;font-size:13.5px;color:var(--ink);font-weight:500}
+.cv-foot{margin-top:auto;padding-top:32px;font-size:11px;color:var(--slate)}
+.cv-foot p{margin:0 0 6px;max-width:none}
+.cv-foot b{color:var(--ink)}
+/* toc */
+.toc-h{border-bottom:1.5px solid var(--ink)}
+.toc{list-style:none;margin:0 0 8px;padding:0;font-size:13px}
+.toc li{display:flex;align-items:baseline;gap:12px;padding:5px 0}
+.toc li span{color:var(--steel);font-weight:600;min-width:18px}
+.toc li i{flex:1;border-bottom:1px dotted #b9c2cc;transform:translateY(-4px)}
+.toc li b{font-weight:500;color:var(--ink)}
+table.sum td:nth-child(3){color:var(--ink)}
+/* questions + limitations */
+.qs,.lim{list-style:none;margin:6px 0 12px;padding:0}
+.qs li,.lim li{display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.qs li:first-child{border-top:1px solid var(--line)}
+.qs li span,.lim li span{flex:none;width:30px;font-weight:600;color:var(--steel)}
+.lim li{border:0;padding:5px 0}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:16px 0 4px;border-top:1.5px solid var(--ink)}
+.steps>div{padding:14px 14px 4px 0}
+.steps>div+div{padding-left:14px;border-left:1px solid var(--line)}
+.steps span{font-size:11px;font-weight:600;color:var(--steel);letter-spacing:.04em}
+.steps h4{margin:6px 0 6px}
+.steps p{font-size:12px;line-height:1.5;color:var(--slate)}
+/* findings */
+.fds{display:grid;gap:8px;margin-top:10px}
+.fd{border:1px solid var(--line);border-left:3px solid var(--ink);padding:11px 16px 9px}
+.fd-h{display:flex;align-items:flex-start;gap:12px}
+.fd-h h4{flex:1}
+.fd-n{font-weight:600;color:var(--steel);font-size:13px;min-width:22px}
+.fd p{font-size:12px;line-height:1.5;margin:5px 0 3px 34px}
+.fd-x{margin-left:34px;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--slate)}
+/* signature */
+.sig{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:34px}
+.sig>div{display:flex;flex-direction:column;font-size:12px;color:var(--slate)}
+.sig-line{height:42px;border-bottom:1px solid var(--ink);margin-bottom:8px}
+.sig b{color:var(--ink);font-size:13px}
+.end{margin-top:34px;text-align:center;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--slate)}
+/* phones */
+@media (max-width:640px){
+  body{font-size:15px}
+  .doc{padding:16px 0 40px}
+  .page{padding:64px 20px 64px;margin-bottom:14px;box-shadow:0 1px 0 #d5dbe2}
+  .rh,.rf{left:20px;right:20px;font-size:9.5px}
+  .rh{top:20px}.rf{bottom:20px}
+  .rh span:first-child{display:none}
+  .wm span{font-size:84px}
+  .cv-main{margin-top:56px}
+  .cv-title{font-size:27px}
+  .cv-meta{grid-template-columns:1fr;margin-top:36px}
+  .cv-foot{padding-top:40px}
+  .steps{grid-template-columns:1fr 1fr}
+  .steps>div:nth-child(3){padding-left:0;border-left:0}
+  .steps>div{border-bottom:1px solid var(--line);padding-bottom:10px}
+  table{font-size:12.5px}
+  .kf{grid-template-columns:1fr 1fr}.kf>div:nth-child(3){padding-left:0;border-left:0}.kf>div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .notice{padding:18px 16px 8px}
+  .tbl{overflow:visible}
+  table,tbody,tr,td{display:block;width:100%!important}
+  colgroup,thead{display:none}
+  table{border-top:1.5px solid var(--ink)}
+  tbody tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  tbody tr:nth-child(even) td{background:none}
+  tbody td{border:0;padding:3px 0;white-space:normal!important;display:grid;grid-template-columns:96px 1fr;gap:10px;font-size:13.5px}
+  tbody td::before{content:attr(data-label);font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--slate);padding-top:2px}
+  tbody td:empty{display:none}
+  .hash{white-space:normal;word-break:break-all;font-size:11.5px}
+  .hash br{display:none}
+  .fd p,.fd-x{margin-left:0}
+  .fd-h{flex-wrap:wrap}.fd-h .conf{margin-left:34px}
+  .sig{grid-template-columns:1fr;gap:16px}
+  .bar .lab{display:none}
+}
+/* print = Letter pages */
+@page{size:letter;margin:0}
+@media print{
+  html,body{background:#fff}
+  .bar{display:none}
+  .doc{padding:0}
+  .page{width:8.5in;height:11in;max-width:none;aspect-ratio:auto;margin:0;box-shadow:none;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto;break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a href="../../cyber-forensics/digital-forensics/"><span aria-hidden="true">&larr;</span> Digital Forensics</a>
+  <span class="lab">Sample report &middot; fictional matter</span>
+  <a class="dl" href="ITRS-Digital-Forensic-Examination-Sample-Report.pdf" download>Download PDF</a>
+</div></header>
+<main class="doc">
+<section class="page cover" aria-label="Page 1 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div>
+<div class="cv-top">
+  <img class="logo" src="../../brand/itrs-logo-400.webp" alt="IT Rapid Support" width="168" height="54">
+  <div class="cv-priv">Privileged &amp; Confidential<br>Prepared at the Direction of Counsel</div>
+</div>
+<div class="cv-main">
+  <div class="cv-kind">Digital Forensic Examination Report</div>
+  <h1 class="cv-title">Examination of a departing employee&rsquo;s devices and cloud accounts</h1>
+  <p class="cv-sub">Data movement, deletion activity and timeline, 19&nbsp;August to 4&nbsp;September 2026</p>
+</div>
+<dl class="cv-meta">
+  <div><dt>Client</dt><dd>[Redacted] &ndash; Ontario professional services firm</dd></div>
+  <div><dt>Instructed by</dt><dd>[Redacted], external litigation counsel</dd></div>
+  <div><dt>Matter no.</dt><dd>DF-2026-0417</dd></div>
+  <div><dt>Report date</dt><dd>30 September 2026</dd></div>
+  <div><dt>Version</dt><dd>1.0 Final</dd></div>
+  <div><dt>Classification</dt><dd>Restricted &ndash; counsel and named recipients only</dd></div>
+</dl>
+<div class="cv-foot">
+  <p><b>Sample document.</b> This is a fictional specimen prepared to illustrate the structure of an ITRS forensic deliverable. The client, custodian, devices, hash values, events and findings are invented and do not relate to any real matter.</p>
+  <p>IT Rapid Support Inc. &middot; 7810 Keele St, Vaughan, ON L4K 0B7 &middot; (289) 582-9930</p>
+</div>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 1 of 10</span></div></section><section class="page" aria-label="Page 2 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2 class="toc-h">Contents</h2>
+<ol class="toc">
+  <li><span>1</span>Executive summary<i></i><b>3</b></li>
+  <li><span>2</span>Background and instructions<i></i><b>4</b></li>
+  <li><span>3</span>Scope and questions examined<i></i><b>4</b></li>
+  <li><span>4</span>Evidence acquired and chain of custody<i></i><b>5</b></li>
+  <li><span>5</span>Methodology and tools<i></i><b>6</b></li>
+  <li><span>6</span>Timeline of findings<i></i><b>7</b></li>
+  <li><span>7</span>Key findings<i></i><b>8</b></li>
+  <li><span>8</span>Limitations and assumptions<i></i><b>9</b></li>
+  <li><span>9</span>Examiner&rsquo;s declaration<i></i><b>9</b></li>
+  <li><span>A</span>Appendix A &ndash; Exhibit list<i></i><b>10</b></li>
+  <li><span>B</span>Appendix B &ndash; Confidence scale<i></i><b>10</b></li>
+</ol>
+<div class="notice">
+  <h3>Important notice</h3>
+  <p>This report has been prepared by IT Rapid Support Inc. at the direction of external counsel, in contemplation of litigation, and is subject to solicitor-client and litigation privilege. It is intended solely for counsel and the named recipients and must not be disclosed, copied or relied upon by any other party without ITRS&rsquo;s written consent.</p>
+  <p>The findings are based on the evidence items listed in section&nbsp;4 as they existed when acquired, and on the limitations in section&nbsp;8. ITRS has not audited or verified information supplied by the client except where stated.</p>
+  <p>Times are Eastern Time (EDT, UTC&minus;04:00) unless labelled otherwise. Personal identifiers have been replaced with role descriptions or initials.</p>
+</div>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 2 of 10</span></div></section><section class="page" aria-label="Page 3 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">1</span>Executive summary</h2>
+<p>IT Rapid Support Inc. (&ldquo;ITRS&rdquo;) was retained by external counsel to the client to examine devices and cloud accounts used by a senior employee (&ldquo;the Custodian&rdquo;) who resigned on 28&nbsp;August 2026 and left the firm on 4&nbsp;September 2026. Counsel asked whether client files were removed or deleted before the Custodian&rsquo;s departure.</p>
+<p>Four evidence items were preserved under chain of custody and examined between 9 and 25&nbsp;September 2026. Our conclusions on each question are summarized below and detailed in section&nbsp;7.</p>
+<div class="kf">
+  <div><b>1,284</b><span>files copied to USB storage on 27&nbsp;Aug</span></div>
+  <div><b>3.6&nbsp;GB</b><span>volume of the USB copy</span></div>
+  <div><b>412</b><span>OneDrive files deleted, all recovered</span></div>
+  <div><b>4</b><span>evidence items, hash-verified</span></div>
+</div>
+<div class="tbl"><table class="sum"><colgroup><col style="width:8%"><col style="width:30%"><col style="width:46%"><col style="width:16%"></colgroup><thead><tr><th scope="col">No.</th><th scope="col">Question</th><th scope="col">Conclusion</th><th scope="col">Confidence</th></tr></thead><tbody><tr><td data-label="No."><div>Q1</div></td><td data-label="Question"><div>Was firm data copied to external storage?</div></td><td data-label="Conclusion"><div>Yes. 1,284 files (3.6&nbsp;GB) from the client file share were copied to a USB storage device on 27&nbsp;August 2026 (F1).</div></td><td data-label="Confidence"><div><span class="conf conf-high">High</span></div></td></tr><tr><td data-label="No."><div>Q2</div></td><td data-label="Question"><div>Was firm data sent to personal cloud or email accounts?</div></td><td data-label="Conclusion"><div>Indicators of upload to a personal cloud storage service on 28&nbsp;August (F2). No forwarding of firm email (F5).</div></td><td data-label="Confidence"><div><span class="conf conf-moderate">Moderate</span></div></td></tr><tr><td data-label="No."><div>Q3</div></td><td data-label="Question"><div>Were steps taken to delete or conceal activity?</div></td><td data-label="Conclusion"><div>Yes. Browser history was cleared on 3&nbsp;September and 412 OneDrive files were deleted on 4&nbsp;September (F3, F4).</div></td><td data-label="Confidence"><div><span class="conf conf-high">High</span></div></td></tr><tr><td data-label="No."><div>Q4</div></td><td data-label="Question"><div>Does the mobile device hold firm documents?</div></td><td data-label="Conclusion"><div>No firm documents or transfer indicators were identified on the mobile device (F6).</div></td><td data-label="Confidence"><div><span class="conf conf-moderate">Moderate</span></div></td></tr><tr><td data-label="No."><div>Q5</div></td><td data-label="Question"><div>Can the files involved be identified?</div></td><td data-label="Conclusion"><div>Yes. Each of the 1,284 files is listed by path, size and time at Exhibit&nbsp;C for counsel&rsquo;s review.</div></td><td data-label="Confidence"><div><span class="conf conf-high">High</span></div></td></tr></tbody></table></div>
+<p class="note">All 412 deleted OneDrive files were recovered intact from the second-stage recycle bin. The USB device used on 27&nbsp;August has not been produced; its contents are known only from artefacts on the laptop and file server.</p>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 3 of 10</span></div></section><section class="page" aria-label="Page 4 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">2</span>Background and instructions</h2>
+<p>2.1&ensp;The client is an Ontario professional services firm. The Custodian held a senior advisory role with access to the firm&rsquo;s client file share and a firm-managed Microsoft&nbsp;365 account. The Custodian gave notice on Friday 28&nbsp;August 2026 and confirmed an intention to join a competing firm.</p>
+<p>2.2&ensp;On 8&nbsp;September 2026 counsel instructed ITRS to preserve and examine the Custodian&rsquo;s firm-issued devices and accounts. ITRS acted on counsel&rsquo;s instructions throughout; this report is prepared for the purpose of anticipated litigation and is subject to legal privilege.</p>
+<p>2.3&ensp;ITRS has no prior relationship with the Custodian and no interest in the outcome of the matter. The examiners&rsquo; duty in preparing this report is set out in section&nbsp;9.</p>
+
+<h2><span class="n">3</span>Scope and questions examined</h2>
+<p>3.1&ensp;The examination covered the period <b>19&nbsp;August 2026 00:00 to 4&nbsp;September 2026 23:59</b> (Eastern Time), being the fourteen days before notice and the notice period. Activity outside that window was reviewed only where it explained an in-scope event.</p>
+<p>3.2&ensp;Counsel asked ITRS to address the following questions:</p>
+<ol class="qs">
+  <li><span>Q1</span>Was firm data copied from firm systems to external storage media during the review period?</li>
+  <li><span>Q2</span>Was firm data transferred to personal cloud storage or personal email accounts?</li>
+  <li><span>Q3</span>Were steps taken to delete firm data or to conceal user activity?</li>
+  <li><span>Q4</span>Does the firm-issued mobile device hold firm documents or evidence of their transfer?</li>
+  <li><span>Q5</span>Can the files involved be identified individually for counsel&rsquo;s review?</li>
+</ol>
+<p>3.3&ensp;Out of scope: personal devices and accounts of the Custodian, which were not made available; review of document content for privilege or relevance, which remains with counsel; and any opinion on the Custodian&rsquo;s intent, which is a matter for the trier of fact.</p>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 4 of 10</span></div></section><section class="page" aria-label="Page 5 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">4</span>Evidence acquired and chain of custody</h2>
+<p>4.1&ensp;Each item was acquired by an ITRS examiner, hashed at acquisition and re-verified before analysis. Working copies were used for all analysis; original images are held on encrypted, access-logged storage at ITRS, Vaughan.</p>
+<div class="tbl"><table class="ev"><colgroup><col style="width:7%"><col style="width:25%"><col style="width:20%"><col style="width:14%"><col style="width:34%"></colgroup><thead><tr><th scope="col">Item</th><th scope="col">Description</th><th scope="col">Acquisition method</th><th scope="col">Acquired (ET)</th><th scope="col">SHA-256 (acquisition = verification)</th></tr></thead><tbody><tr><td data-label="Item"><div>E01</div></td><td data-label="Description"><div>Firm laptop, Windows&nbsp;11 Pro, 512&nbsp;GB NVMe, BitLocker. Serial &hellip;4QK7</div></td><td data-label="Acquisition method"><div>Physical image, hardware write-blocked</div></td><td data-label="Acquired"><div>2026-09-09<br><span class="sm">10:14 &middot; J.R.</span></div></td><td data-label="SHA-256"><div><span class="hash">11a08f1b10f227394d8100b3980aea78<br>25ba0b980f8db89a64f2fe39383cfdf0</span></div></td></tr><tr><td data-label="Item"><div>E02</div></td><td data-label="Description"><div>Firm mobile phone, iOS&nbsp;26.0.1, 256&nbsp;GB. IMEI &hellip;0193</div></td><td data-label="Acquisition method"><div>Full-file-system extraction</div></td><td data-label="Acquired"><div>2026-09-09<br><span class="sm">13:02 &middot; M.T.</span></div></td><td data-label="SHA-256"><div><span class="hash">3d37112d889b59d7a23e24bc701d2cb9<br>9b6c7dc76506e6ce648654412a6db2f5</span></div></td></tr><tr><td data-label="Item"><div>E03</div></td><td data-label="Description"><div>Microsoft&nbsp;365 account: mailbox, OneDrive, audit log</div></td><td data-label="Acquisition method"><div>Logical cloud collection, read-only role</div></td><td data-label="Acquired"><div>2026-09-10<br><span class="sm">09:30 &middot; J.R.</span></div></td><td data-label="SHA-256"><div><span class="hash">07c7b4b5d48d4941d9e305d28af38ecc<br>7c3c378c48ddbe0521ac626e3faa8e0e</span></div></td></tr><tr><td data-label="Item"><div>E04</div></td><td data-label="Description"><div>File server security event logs (IDs 4656/4663)</div></td><td data-label="Acquisition method"><div>Logical export, observed by ITRS</div></td><td data-label="Acquired"><div>2026-09-10<br><span class="sm">11:45 &middot; M.T.</span></div></td><td data-label="SHA-256"><div><span class="hash">f05694dd9085d10835bb6f94b0e9c3d9<br>1e930282d3ab7416eb2c30244e7c15ce</span></div></td></tr></tbody></table></div>
+<h3>4.2&ensp;Chain of custody</h3>
+<div class="tbl"><table class="coc"><colgroup><col style="width:21%"><col style="width:11%"><col style="width:44%"><col style="width:11%"><col style="width:13%"></colgroup><thead><tr><th scope="col">Date / time (ET)</th><th scope="col">Item</th><th scope="col">Action</th><th scope="col">From</th><th scope="col">To</th></tr></thead><tbody><tr><td data-label="Date / time"><div>2026-09-04 17:30</div></td><td data-label="Item"><div>E01&ndash;02</div></td><td data-label="Action"><div>Returned by Custodian; powered off and bagged</div></td><td data-label="From"><div>Custodian</div></td><td data-label="To"><div>Firm IT</div></td></tr><tr><td data-label="Date / time"><div>2026-09-09 09:05</div></td><td data-label="Item"><div>E01&ndash;02</div></td><td data-label="Action"><div>Collected in sealed bags 0417-01/02, seals intact</div></td><td data-label="From"><div>Firm IT</div></td><td data-label="To"><div>J.R.</div></td></tr><tr><td data-label="Date / time"><div>2026-09-09 10:14</div></td><td data-label="Item"><div>E01</div></td><td data-label="Action"><div>Imaging 10:14&ndash;12:41; hashes matched</div></td><td data-label="From"><div>J.R.</div></td><td data-label="To"><div>J.R.</div></td></tr><tr><td data-label="Date / time"><div>2026-09-09 13:02</div></td><td data-label="Item"><div>E02</div></td><td data-label="Action"><div>Extraction 13:02&ndash;14:26; hashes matched</div></td><td data-label="From"><div>J.R.</div></td><td data-label="To"><div>M.T.</div></td></tr><tr><td data-label="Date / time"><div>2026-09-10 09:30</div></td><td data-label="Item"><div>E03</div></td><td data-label="Action"><div>Cloud collection 09:30&ndash;11:02; export hashed</div></td><td data-label="From"><div>&mdash;</div></td><td data-label="To"><div>J.R.</div></td></tr><tr><td data-label="Date / time"><div>2026-09-10 11:45</div></td><td data-label="Item"><div>E04</div></td><td data-label="Action"><div>Event-log export hashed on receipt</div></td><td data-label="From"><div>Firm IT</div></td><td data-label="To"><div>M.T.</div></td></tr><tr><td data-label="Date / time"><div>2026-09-10 16:20</div></td><td data-label="Item"><div>E01&ndash;02</div></td><td data-label="Action"><div>Resealed (bags 0417-03/04); placed in evidence safe</div></td><td data-label="From"><div>M.T.</div></td><td data-label="To"><div>Evidence store</div></td></tr></tbody></table></div>
+<p class="note">Custody forms signed at each transfer are reproduced at Exhibit&nbsp;A. Hash verification reports are at Exhibit&nbsp;B.</p>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 5 of 10</span></div></section><section class="page" aria-label="Page 6 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">5</span>Methodology and tools</h2>
+<p>5.1&ensp;The examination followed ITRS&rsquo;s documented procedures, which are aligned with ISO/IEC&nbsp;27037 (identification, collection, acquisition and preservation of digital evidence) and NIST SP&nbsp;800-86 (integrating forensic techniques into incident response). Examiners kept contemporaneous notes for every step (Exhibit&nbsp;G).</p>
+<div class="steps">
+  <div><span>01</span><h4>Preserve</h4><p>Write-blocked physical imaging of storage; full-file-system mobile extraction; read-only cloud collection. No examination was performed on original media.</p></div>
+  <div><span>02</span><h4>Verify</h4><p>SHA-256 computed at acquisition and recomputed on every working copy before analysis. All values matched (section&nbsp;4).</p></div>
+  <div><span>03</span><h4>Analyze</h4><p>Artefacts parsed and correlated across sources: USB device history, file-system and link-file records, browser history, cloud audit events and mobile application data.</p></div>
+  <div><span>04</span><h4>Validate</h4><p>Each finding was confirmed by at least two independent artefacts or tools, and reviewed by a second examiner before inclusion.</p></div>
+</div>
+<h3>5.2&ensp;Tool categories used</h3>
+<div class="tbl"><table class="tools"><colgroup><col style="width:30%"><col style="width:44%"><col style="width:26%"></colgroup><thead><tr><th scope="col">Category</th><th scope="col">Purpose in this matter</th><th scope="col">Validation</th></tr></thead><tbody><tr><td data-label="Category"><div>Hardware write-blocker (NVMe / USB&nbsp;3)</div></td><td data-label="Purpose in this matter"><div>Prevent any write to E01 during imaging</div></td><td data-label="Validation"><div>Function-tested before use; test log in Exhibit&nbsp;G</div></td></tr><tr><td data-label="Category"><div>Commercial forensic analysis suite</div></td><td data-label="Purpose in this matter"><div>Parse Windows artefacts (registry, link files, Jump Lists, ShellBags, browser data) and build a unified timeline</div></td><td data-label="Validation"><div>Key results reproduced with a second tool</div></td></tr><tr><td data-label="Category"><div>Mobile extraction and analysis platform</div></td><td data-label="Purpose in this matter"><div>Full-file-system extraction and parsing of E02 application databases</div></td><td data-label="Validation"><div>Sample records checked against raw SQLite databases</div></td></tr><tr><td data-label="Category"><div>Open-source registry and event-log parsers</div></td><td data-label="Purpose in this matter"><div>Independent parsing of USB device history and file server events 4656/4663</div></td><td data-label="Validation"><div>Cross-checked against the commercial suite output</div></td></tr><tr><td data-label="Category"><div>Microsoft Purview audit search</div></td><td data-label="Purpose in this matter"><div>Export of Unified Audit Log, mailbox rules and OneDrive activity for E03</div></td><td data-label="Validation"><div>Record counts reconciled with export manifest</div></td></tr></tbody></table></div>
+<p>5.3&ensp;Tool names and exact versions are recorded in Exhibit&nbsp;G. Times in this report are shown in Eastern Time (EDT, UTC&minus;04:00). Source artefacts recorded in UTC were converted programmatically; the original UTC values are retained in the exhibits.</p>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 6 of 10</span></div></section><section class="page" aria-label="Page 7 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">6</span>Timeline of findings</h2>
+<p>6.1&ensp;The timeline below lists the events material to the questions in section&nbsp;3. The full correlated timeline (6,912 events) is produced at Exhibit&nbsp;C.</p>
+<div class="tbl"><table class="tl"><colgroup><col style="width:14%"><col style="width:15%"><col style="width:45%"><col style="width:10%"><col style="width:16%"></colgroup><thead><tr><th scope="col">Date</th><th scope="col">Time (ET)</th><th scope="col">Event</th><th scope="col">Source</th><th scope="col">Artefact</th></tr></thead><tbody><tr><td data-label="Date"><div>2026-08-19</div></td><td data-label="Time"><div>21:42</div></td><td data-label="Event"><div>Personal webmail account signed in through Chrome on the firm laptop</div></td><td data-label="Source"><div>E01</div></td><td data-label="Artefact"><div>Browser login data</div></td></tr><tr><td data-label="Date"><div>2026-08-27</div></td><td data-label="Time"><div>18:52</div></td><td data-label="Event"><div>USB storage device &ldquo;DataTraveler 64&nbsp;GB&rdquo; (serial ending &hellip;7F3A) first connected as drive E:</div></td><td data-label="Source"><div>E01</div></td><td data-label="Artefact"><div>Registry, setup log</div></td></tr><tr><td></td><td data-label="Time"><div>18:58&ndash;19:41</div></td><td data-label="Event"><div>1,284 files read from the client file share and written to E:; 3.6&nbsp;GB in total</div></td><td data-label="Source"><div>E01, E04</div></td><td data-label="Artefact"><div>Link files, ShellBags, events 4663</div></td></tr><tr><td></td><td data-label="Time"><div>19:44</div></td><td data-label="Event"><div>USB device last removed</div></td><td data-label="Source"><div>E01</div></td><td data-label="Artefact"><div>Registry, event log</div></td></tr><tr><td data-label="Date"><div>2026-08-28</div></td><td data-label="Time"><div>08:31</div></td><td data-label="Event"><div>Resignation email sent to the managing partner</div></td><td data-label="Source"><div>E03</div></td><td data-label="Artefact"><div>Mailbox</div></td></tr><tr><td></td><td data-label="Time"><div>12:07&ndash;12:22</div></td><td data-label="Event"><div>Personal cloud storage upload page visited; file-picker dialog opened on E:\Clients</div></td><td data-label="Source"><div>E01</div></td><td data-label="Artefact"><div>Browser cache, Jump Lists</div></td></tr><tr><td data-label="Date"><div>2026-09-03</div></td><td data-label="Time"><div>17:20</div></td><td data-label="Event"><div>Chrome history, cookies and cache cleared for &ldquo;all time&rdquo;</div></td><td data-label="Source"><div>E01</div></td><td data-label="Artefact"><div>Browser preferences</div></td></tr><tr><td data-label="Date"><div>2026-09-04</div></td><td data-label="Time"><div>16:05&ndash;16:11</div></td><td data-label="Event"><div>412 files deleted from OneDrive folder &ldquo;Client Working Papers&rdquo;</div></td><td data-label="Source"><div>E03</div></td><td data-label="Artefact"><div>Unified Audit Log</div></td></tr><tr><td></td><td data-label="Time"><div>16:13</div></td><td data-label="Event"><div>First-stage recycle bin emptied</div></td><td data-label="Source"><div>E03</div></td><td data-label="Artefact"><div>Unified Audit Log</div></td></tr><tr><td></td><td data-label="Time"><div>17:30</div></td><td data-label="Event"><div>Laptop and phone returned to firm IT; custody begins</div></td><td data-label="Source"><div>&mdash;</div></td><td data-label="Artefact"><div>Custody form</div></td></tr></tbody></table></div>
+<p class="note">Events on 27&nbsp;August are corroborated by two independent sources: link-file and ShellBag records on the laptop (E01) and object-access events on the file server (E04). File server times match laptop times to within two seconds.</p>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 7 of 10</span></div></section><section class="page" aria-label="Page 8 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">7</span>Key findings</h2>
+<p>7.1&ensp;Each finding is stated with the evidence on which it rests and a confidence level defined in Appendix&nbsp;B.</p>
+<div class="fds"><article class="fd"><div class="fd-h"><span class="fd-n">F1</span><h4>Client files were copied to a USB storage device on 27&nbsp;August 2026.</h4><span class="conf conf-high">High</span></div><p>A USB device not issued by the firm was connected for 52 minutes. Link files and ShellBags record folders under E:\Clients being opened during that session, and the file server logged reads of the same 1,284 files by the Custodian&rsquo;s account at matching times. 212 of the files belong to client folders not assigned to the Custodian.</p><div class="fd-x">Exhibit C, D</div></article><article class="fd"><div class="fd-h"><span class="fd-n">F2</span><h4>Firm files were probably uploaded to a personal cloud storage service on 28&nbsp;August 2026.</h4><span class="conf conf-moderate">Moderate</span></div><p>Cached pages show the upload screen of a consumer cloud storage service signed in to a personal account, and a Jump List records a file-picker opened on E:\Clients. Browser history for the period was later cleared (F3), so the number of files uploaded cannot be determined.</p><div class="fd-x">Exhibit D</div></article><article class="fd"><div class="fd-h"><span class="fd-n">F3</span><h4>Browser history was deliberately cleared on 3&nbsp;September 2026.</h4><span class="conf conf-high">High</span></div><p>Chrome preference records show a manual &ldquo;clear browsing data&rdquo; action with an &ldquo;all time&rdquo; range at 17:20. Firm policy does not clear browser data automatically. ITRS expresses no view on the reason for the action.</p><div class="fd-x">Exhibit D</div></article><article class="fd"><div class="fd-h"><span class="fd-n">F4</span><h4>412 OneDrive files were deleted on the last working day; all were recovered.</h4><span class="conf conf-high">High</span></div><p>The Unified Audit Log records 412 FileDeleted events in six minutes, followed by the first-stage recycle bin being emptied. All files were restored from the second-stage recycle bin and hash-matched to earlier versions.</p><div class="fd-x">Exhibit E</div></article><article class="fd"><div class="fd-h"><span class="fd-n">F5</span><h4>No firm email was forwarded to personal accounts.</h4><span class="conf conf-high">High</span></div><p>No inbox or transport forwarding rules existed in the review period, and no messages were sent from the mailbox to personal domains.</p><div class="fd-x">Exhibit E</div></article><article class="fd"><div class="fd-h"><span class="fd-n">F6</span><h4>No firm documents were found on the mobile device.</h4><span class="conf conf-moderate">Moderate</span></div><p>No firm documents, file-share paths or cloud-storage transfers were identified. One third-party messaging app stores content in an encrypted container that the extraction could not fully parse (section&nbsp;8).</p><div class="fd-x">Exhibit F</div></article></div>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 8 of 10</span></div></section><section class="page" aria-label="Page 9 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">8</span>Limitations and assumptions</h2>
+<ol class="lim">
+  <li><span>8.1</span>The USB device used on 27&nbsp;August has not been produced. Its current contents, and whether files were later copied elsewhere, cannot be determined from the evidence examined.</li>
+  <li><span>8.2</span>Browser data cleared on 3&nbsp;September could be recovered only in part. Finding F2 relies on cached pages and Jump List records, not on a complete browsing history.</li>
+  <li><span>8.3</span>One third-party messaging application on E02 stores content in an encrypted container. Message metadata was available; message content and attachments were not.</li>
+  <li><span>8.4</span>File server logs were produced by firm IT. ITRS observed the export and hashed it on receipt, but did not have direct access to the server.</li>
+  <li><span>8.5</span>Attribution of activity to the Custodian rests on the Custodian&rsquo;s credentials, device possession records and the absence of other interactive logons in the review period. ITRS cannot identify who was physically at the keyboard.</li>
+  <li><span>8.6</span>This report reflects the evidence available on 25&nbsp;September 2026. ITRS reserves the right to revise its conclusions if further evidence, including the USB device, becomes available.</li>
+</ol>
+
+<h2><span class="n">9</span>Examiner&rsquo;s declaration</h2>
+<p>9.1&ensp;We confirm that the facts stated in this report are within our own knowledge or are drawn from the evidence identified, and that the opinions expressed are our own, fairly and objectively given. We understand that our duty is to assist the court and that this duty overrides any obligation to the party by whom we are engaged. A signed Acknowledgement of Expert&rsquo;s Duty (Form&nbsp;53, Ontario Rules of Civil Procedure) is provided at Exhibit&nbsp;H.</p>
+<div class="sig">
+  <div><div class="sig-line"></div><b>J.R.</b><span>Lead forensic examiner</span><span>IT Rapid Support Inc.</span></div>
+  <div><div class="sig-line"></div><b>M.T.</b><span>Reviewing forensic examiner</span><span>IT Rapid Support Inc.</span></div>
+</div>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 9 of 10</span></div></section><section class="page" aria-label="Page 10 of 10"><div class="wm" aria-hidden="true"><span>SAMPLE</span></div><div class="rh"><span>IT Rapid Support Inc. &middot; Digital Forensic Examination Report</span><span><b>DF-2026-0417</b> &middot; Privileged &amp; Confidential</span></div>
+<h2><span class="n">A</span>Appendix A &ndash; Exhibit list</h2>
+<div class="tbl"><table class="ex"><colgroup><col style="width:11%"><col style="width:63%"><col style="width:12%"><col style="width:14%"></colgroup><thead><tr><th scope="col">Exhibit</th><th scope="col">Description</th><th scope="col">Format</th><th scope="col">Extent</th></tr></thead><tbody><tr><td data-label="Exhibit"><div>A</div></td><td data-label="Description"><div>Evidence register and signed chain-of-custody forms</div></td><td data-label="Format"><div>PDF</div></td><td data-label="Extent"><div>7 pp.</div></td></tr><tr><td data-label="Exhibit"><div>B</div></td><td data-label="Description"><div>Hash verification reports, items E01 to E04</div></td><td data-label="Format"><div>PDF</div></td><td data-label="Extent"><div>4 pp.</div></td></tr><tr><td data-label="Exhibit"><div>C</div></td><td data-label="Description"><div>Correlated timeline, 19 Aug to 4 Sep 2026 (6,912 events) and USB file list (1,284 files)</div></td><td data-label="Format"><div>XLSX</div></td><td data-label="Extent"><div>2 sheets</div></td></tr><tr><td data-label="Exhibit"><div>D</div></td><td data-label="Description"><div>Windows artefact extracts: USB history, link files, ShellBags, Jump Lists, browser data</div></td><td data-label="Format"><div>XLSX</div></td><td data-label="Extent"><div>5 sheets</div></td></tr><tr><td data-label="Exhibit"><div>E</div></td><td data-label="Description"><div>Microsoft&nbsp;365 Unified Audit Log extract and mailbox rule report</div></td><td data-label="Format"><div>XLSX</div></td><td data-label="Extent"><div>3 sheets</div></td></tr><tr><td data-label="Exhibit"><div>F</div></td><td data-label="Description"><div>Mobile extraction summary and application inventory, item E02</div></td><td data-label="Format"><div>PDF</div></td><td data-label="Extent"><div>12 pp.</div></td></tr><tr><td data-label="Exhibit"><div>G</div></td><td data-label="Description"><div>Examiner contemporaneous notes, tool versions and validation logs</div></td><td data-label="Format"><div>PDF</div></td><td data-label="Extent"><div>18 pp.</div></td></tr><tr><td data-label="Exhibit"><div>H</div></td><td data-label="Description"><div>Acknowledgement of Expert&rsquo;s Duty (Form 53), signed</div></td><td data-label="Format"><div>PDF</div></td><td data-label="Extent"><div>2 pp.</div></td></tr></tbody></table></div>
+<p class="note">Exhibits are produced to counsel on encrypted media with a SHA-256 manifest. They are not reproduced in this sample.</p>
+
+<h2><span class="n">B</span>Appendix B &ndash; Confidence scale</h2>
+<div class="tbl"><table class="scale"><colgroup><col style="width:18%"><col style="width:82%"></colgroup><thead><tr><th scope="col">Level</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td data-label="Level"><div><span class="conf conf-high">High</span></div></td><td data-label="Meaning"><div>Supported by two or more independent artefacts or sources, with no contrary evidence identified.</div></td></tr><tr><td data-label="Level"><div><span class="conf conf-moderate">Moderate</span></div></td><td data-label="Meaning"><div>Supported by at least one reliable artefact; corroboration is partial or some relevant data is unavailable.</div></td></tr><tr><td data-label="Level"><div><span class="conf conf-low">Low</span></div></td><td data-label="Meaning"><div>Indicated by circumstantial artefacts only; stated so that counsel is aware of it, not relied on in the conclusions.</div></td></tr></tbody></table></div>
+<p class="end">End of report</p>
+<div class="rf"><span>Sample &ndash; fictional matter &middot; Version 1.0 Final</span><span>Page 10 of 10</span></div></section>
+</main>
+</body>
+</html>
